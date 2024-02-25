@@ -23,9 +23,9 @@ public class JwtGernater {
     public String generateToken(UserBean userBean) {
         return Jwts.builder()
                 .claim("userId", userBean.getUsername())
-                .subject(userBean.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+30*60*1000))
+                .setSubject(userBean.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+30*60*1000))
                 .signWith(getSignKey())
                 .compact();
     }
@@ -36,7 +36,7 @@ public class JwtGernater {
     //驗證token是否有效
     public boolean isVaild(String token){
         try{
-            Jwts.parser()
+            Jwts.parserBuilder()
                     .setSigningKey(getSignKey())
                     .build()
                     .parse(token);
