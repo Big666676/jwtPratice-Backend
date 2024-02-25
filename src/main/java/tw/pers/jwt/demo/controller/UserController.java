@@ -31,7 +31,7 @@ public class UserController {
         System.out.println(asd);
         String jwtToken=asd.substring(7).trim();
         System.out.println(jwtToken);
-        jwtGernater.isVaild(asd);
+        System.out.println(jwtGernater.isVaild(asd));
         return ResponseEntity.ok().body("SSS");
 
     }
