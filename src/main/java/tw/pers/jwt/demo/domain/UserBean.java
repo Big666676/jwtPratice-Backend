@@ -23,8 +23,8 @@ public class UserBean {
     private String email;
     @Column(name = "birth")
     private Date birth;
-    @Column(name = "jwt_token",columnDefinition = "varchar")
-    private String jwtToken;
+    @Column(name = "permission")
+    private Integer permission;
     @Column(name = "bcryptpwd",columnDefinition = "varchar")
     private String bcryptpwd;
     @Column(name = "enabled")
