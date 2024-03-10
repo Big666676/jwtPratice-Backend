@@ -1,10 +1,11 @@
-package tw.pers.jwt.demo.service;
+package tw.pers.jwt.demo.util;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tw.pers.jwt.demo.domain.UserBean;
@@ -12,20 +13,19 @@ import tw.pers.jwt.demo.domain.UserBean;
 import java.security.Key;
 import java.util.Date;
 
-@Service
-@Transactional
-public class JwtGernater {
+@Component
+public class JwtUtil{
     private final static String SECRET_KEY = "443185454aa1d224ae5fa6a04847d7c690abe7eac0e7b97e5fd885598ef197a0";
 
-    private final static Logger logger=LoggerFactory.getLogger(JwtGernater.class);
+    private final static Logger logger=LoggerFactory.getLogger(JwtUtil.class);
     //
     //用來生成token
     public String generateToken(UserBean userBean) {
         return Jwts.builder()
-                .claim("userId", userBean.getUsername())
-                .setSubject(userBean.getUsername())
+                .claim("userId", userBean.getUserId())
+                .claim("permission",userBean.getPermission())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+30*60*1000))
+                .setExpiration(new Date(System.currentTimeMillis()+10*1000))
                 .signWith(getSignKey())
                 .compact();
     }
