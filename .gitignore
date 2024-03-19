@@ -14,10 +14,12 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+out/
 .idea/
-*.iws
+.idea_modules/
 *.iml
 *.ipr
+*.iws
 
 ### NetBeans ###
 /nbproject/private/
@@ -31,6 +33,7 @@ build/
 
 ### VS Code ###
 .vscode/
+.code-workspace
 
 # Compiled class file
 *.class
