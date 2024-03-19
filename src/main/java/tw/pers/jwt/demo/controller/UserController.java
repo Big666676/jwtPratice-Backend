@@ -11,7 +11,7 @@ import tw.pers.jwt.demo.util.JwtUtil;
 @RestController
 @RequestMapping("/user")
 @CrossOrigin
-public class UserController{
+public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -19,22 +19,34 @@ public class UserController{
     private UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> userLogin(@RequestBody UserBean request){
-        if(request!=null){
-            String token=userService.userSignIn(request);
-            if(StringUtils.hasText(token)){
+    public ResponseEntity<?> userLogin(@RequestBody UserBean request) {
+        if (request != null) {
+            String token = userService.userSignIn(request);
+            if (StringUtils.hasText(token)) {
                 return ResponseEntity.ok().body(token);
             }
         }
-        return  ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/check")
-    public ResponseEntity<?> checkValid(@RequestHeader("Authorization") String token){
-        String jwtToken=token.substring(7).trim();
-        if(jwtUtil.isVaild(jwtToken)){
+    public ResponseEntity<?> checkValid(@RequestHeader("Authorization") String token) {
+        String jwtToken = token.substring(7).trim();
+        if (jwtUtil.isVaild(jwtToken)) {
             return ResponseEntity.ok().body(true);
         }
         return ResponseEntity.status(401).build();
     }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> findUserByUsername(@PathVariable("username") String username) {
+        if (StringUtils.hasText(username)) {
+            UserBean user = userService.userByUsername(username);
+            if (user != null) {
+                return ResponseEntity.ok().body(true);
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

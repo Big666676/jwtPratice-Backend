@@ -23,8 +23,8 @@ public class UserRepositoryTests{
 
     @Test
     public void pwdConvert(){
-        String aaa=BCrypt.hashpw("eee",BCrypt.gensalt());
-        UserBean alex=userRepository.findByUsername("Ellen").orElse(null);
+        String aaa=BCrypt.hashpw("aaa",BCrypt.gensalt());
+        UserBean alex=userRepository.findByUsername("Alex").orElse(null);
         alex.setBcryptpwd(aaa);
         userRepository.save(alex);
     }
