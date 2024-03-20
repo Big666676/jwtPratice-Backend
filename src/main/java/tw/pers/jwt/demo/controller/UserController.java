@@ -43,7 +43,7 @@ public class UserController {
         if (StringUtils.hasText(username)) {
             UserBean user = userService.userByUsername(username);
             if (user != null) {
-                return ResponseEntity.ok().body(true);
+                return ResponseEntity.ok().body(user);
             }
         }
         return ResponseEntity.notFound().build();

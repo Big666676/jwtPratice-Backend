@@ -13,6 +13,7 @@ import java.net.UnknownHostException;
 /*
 此類別是用來設定資料傳到redis時的序列化方法，如果沒有設置，會用JDK內建的方式，
 會讓資料存進redis後看不懂存了什麼
+
  */
 //@Configuration
 public class RedisConfig {

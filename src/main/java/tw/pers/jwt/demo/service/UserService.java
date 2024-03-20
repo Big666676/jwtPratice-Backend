@@ -3,6 +3,8 @@ package tw.pers.jwt.demo.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -14,21 +16,20 @@ import org.springframework.util.StringUtils;
 import tw.pers.jwt.demo.dao.UserRepository;
 import tw.pers.jwt.demo.domain.UserBean;
 import tw.pers.jwt.demo.util.JwtUtil;
+import tw.pers.jwt.demo.util.RedisUtil;
 
 @Service
 @Transactional(rollbackFor = {Exception.class})
 public class UserService {
-
-
+    private final static Logger logger=LoggerFactory.getLogger(UserService.class);
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private JwtUtil jwtUtil;
-
+    @Autowired
+    private RedisUtil redisUtil;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -72,20 +73,19 @@ public class UserService {
     public UserBean userByUsername(String username) {
         UserBean user = null;
         try {
-            ValueOperations<String, String> svo = stringRedisTemplate.opsForValue();
-            String redTest1 = svo.get(username);
+            String redTest1 = redisUtil.getValue(username);
             System.out.println(1);
             if (redTest1 == null) {
                 user = userRepository.findByUsername(username).orElse(null);
                 System.out.println(2);
                 if (user != null) {
-                    svo.set(user.getUsername(), objectMapper.writeValueAsString(user));
-                    redTest1 = svo.get(user.getUsername());
+                    redisUtil.setValue(user.getUsername(), objectMapper.writeValueAsString(user));
+                    redTest1 = redisUtil.getValue(user.getUsername());
                 }
             }
             user = objectMapper.readValue(redTest1, UserBean.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("JsonProcessingException {}",e.getMessage());
         }
         return user;
     }
