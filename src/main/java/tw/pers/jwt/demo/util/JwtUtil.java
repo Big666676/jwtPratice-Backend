@@ -1,54 +1,57 @@
 package tw.pers.jwt.demo.util;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import tw.pers.jwt.demo.domain.UserBean;
+import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import tw.pers.jwt.demo.entity.UserDetail;
 
 import java.security.Key;
 import java.util.Date;
 
-@Component
+@Slf4j
+@UtilityClass
 public class JwtUtil{
     private final static String SECRET_KEY = "443185454aa1d224ae5fa6a04847d7c690abe7eac0e7b97e5fd885598ef197a0";
-
-    private final static Logger logger=LoggerFactory.getLogger(JwtUtil.class);
-    //
-    //用來生成token
-    public String generateToken(UserBean userBean) {
+    
+    /**
+     * 用來生成token
+     */
+    public String generateToken(UserDetail userDetail) {
         return Jwts.builder()
-                .claim("userId", userBean.getUserId())
-                .claim("permission",userBean.getPermission())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .claim("userId", userDetail.getUserId())
+                .claim("permission",userDetail.getPermission())
+                .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis()+10*1000))
                 .signWith(getSignKey())
                 .compact();
     }
 
-
-   
-
-    //驗證token是否有效
-    public boolean isVaild(String token){
+    /**
+     * 驗證token是否有效
+     */
+    public boolean isValid(String token){
+        boolean result = false;
         try{
             Jwts.parserBuilder()
                     .setSigningKey(getSignKey())
                     .build()
                     .parse(token);
-            return true;
+            result= true;
         } catch(MalformedJwtException e){
-            logger.error("Invalid JWT token: {}",e.getMessage());
+            log.error("Invalid JWT token: {}",e.getMessage());
         } catch(ExpiredJwtException e){
-            logger.error("JWT token is expired: {}",e.getMessage());
+            log.error("JWT token is expired: {}",e.getMessage());
         } catch(UnsupportedJwtException e){
-            logger.error("JWT token is unsupported: {}",e.getMessage());
+            log.error("JWT token is unsupported: {}",e.getMessage());
         } catch(IllegalArgumentException e){
-            logger.error("JWT claims string is empty: {}",e.getMessage());
+            log.error("JWT claims string is empty: {}",e.getMessage());
         }
-        return false;
+        return result;
 
     }
 
