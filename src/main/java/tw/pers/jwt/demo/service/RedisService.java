@@ -1,12 +1,14 @@
 package tw.pers.jwt.demo.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
 @Service
 public class RedisService{
     
-    private final StringRedisTemplate stringRedisTemplate=new StringRedisTemplate();
+    private final StringRedisTemplate stringRedisTemplate;
 
     /**
      * 使用StringRedisTemplate
