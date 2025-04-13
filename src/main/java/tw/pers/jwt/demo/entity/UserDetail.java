@@ -1,16 +1,14 @@
-package tw.pers.jwt.demo.domain;
+package tw.pers.jwt.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "user_detail")
-public class UserBean {
+public class UserDetail{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
